@@ -17,10 +17,10 @@ int main(int argc, char* argv[]) {
     }
 
     unsigned maxdigits = atoi(argv[1]);
-    unsigned num, ones, curr;
-    for (num = 0; num < maxdigits; ++num) {
+    
+    for (unsigned num = 0; num < maxdigits; ++num) {
         // count the number of ones in the binary expansion of num
-        ones = 0, curr = num;
+        unsigned ones = 0, curr = num;
         while (curr) {
             ones += (curr & 1);
             curr = curr >> 1;
