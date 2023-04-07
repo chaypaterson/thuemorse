@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     for (unsigned num = 0; num < maxdigits; ++num) {
         // count the number of ones in the binary expansion of num
         unsigned ones = 0, curr = num;
-        for (int shift = 0; shift < 8 * sizeof(num); ++shift) {
+        while (curr) {
             ones += (curr & 1);
             curr = curr >> 1;
         }
