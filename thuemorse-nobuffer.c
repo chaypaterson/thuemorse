@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//#define SILENT
+#ifndef SILENT
+#define hideifdebug(arg) (arg)
+#else
+#define hideifdebug(arg) {}
+#endif
+
 /* This program emits the Thue-Morse sequence up to the given number of digits.
  * It should be invoked by:
  *      ./thuemorse [digits]
@@ -25,9 +32,9 @@ int main(int argc, char* argv[]) {
             ones += (curr & 1);
             curr = curr >> 1;
         }
-        putchar(48 + (ones % 2));
+        hideifdebug(putchar(48 + (ones % 2)));
     }
-    printf("\n");
+    hideifdebug(printf("\n"));
 
     return 0;
 }

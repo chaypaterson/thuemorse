@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
     }
 
     unsigned maxdigits = atoi(argv[1]);
-    unsigned buffersize = 1024;
-    char buffer[buffersize];
+    unsigned buffersize = 1 << 30;
+    char *buffer = (char *)malloc(buffersize * sizeof(char));
     char *box = buffer; // pointer to buffer element
 
     for (unsigned num = 0; num < maxdigits; ++num) {
@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
         putchar(48 + *box);
     }
     printf("\n");
+    free(buffer);
 
     return 0;
 }
