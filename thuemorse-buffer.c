@@ -9,6 +9,10 @@
  *      cc thuemorse.c -o thuemorse -std=c99
  */
 
+#include "queue.h"
+
+void stream_digits(unsigned maxdigits);
+
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         printf("Pass a number of digits as an argument:\n");
