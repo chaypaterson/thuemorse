@@ -11,19 +11,9 @@
 
 #include "queue.h"
 
-void stream_digits(unsigned maxdigits);
-
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        printf("Pass a number of digits as an argument:\n");
-        printf("    ./thuemorse [digits]\n");
-        return 1;
-    }
-
-    unsigned maxdigits = atoi(argv[1]);
-    unsigned buffersize = 1 << 30;
-    char *buffer = (char *)malloc(buffersize * sizeof(char));
-    char *box = buffer; // pointer to buffer element
+void stream_digits(const unsigned maxdigits, const unsigned buffersize,
+                   char* *buffer, struct Queue *queue) {
+    char *elem = *buffer; // pointer to start of current string
 
     for (unsigned num = 0; num < maxdigits; ++num) {
         // count the number of ones in the binary expansion of num
@@ -34,22 +24,52 @@ int main(int argc, char* argv[]) {
         }
 
         // store the result in the buffer:
-        *box++ = (ones % 2);
+        *elem++ = (ones % 2);
 
-        // when the buffer is full: print the contents and reset it
+        // when the buffer is full, add the contents to the queue and create a
+        // new buffer:
         if (!((num + 1) % buffersize)) {
-            for (box = buffer; box < buffer + buffersize; ++box) {
-                putchar(48 + *box);
-            }
-            box = buffer;
+            enqueue(*buffer, queue);
+            *buffer = (char *)malloc(buffersize * sizeof(char));
+            elem = *buffer;
         }
     }
-    // print anything left over in the buffer
-    for (box = buffer; box < buffer + (maxdigits % buffersize); ++box) {
-        putchar(48 + *box);
+}
+
+void print_buffer(const char *buffer, unsigned stop) {
+    const char *elem = buffer;
+    for (elem = buffer; elem < buffer + stop; ++elem) {
+        putchar(48 + *elem);
+    }
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        printf("Pass a number of digits as an argument:\n");
+        printf("    ./thuemorse [digits]\n");
+        return 1;
+    }
+
+    unsigned maxdigits = atoi(argv[1]);
+    unsigned buffersize = 1 << 20;
+    char *buffer = (char *)malloc(buffersize * sizeof(char));
+    struct Queue queue = {0, 0};
+
+    // first process: generate lots of digits and queue the results:
+    stream_digits(maxdigits, buffersize, &buffer, &queue);
+
+    // second process: print the queued strings:
+    while (queue.end) {
+        print_buffer((const char *)((queue.end)->item), buffersize);
+        dequeue(&queue);
+    }
+    // when both these processes are complete...
+    // print anything left over in the buffer, then free it:
+    if (buffer) {
+        print_buffer(buffer, (maxdigits % buffersize));
+        free(buffer);
     }
     printf("\n");
-    free(buffer);
 
     return 0;
 }
