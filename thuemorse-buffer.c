@@ -20,7 +20,7 @@ void stream_digits(const unsigned maxdigits, const unsigned buffersize,
         unsigned ones = 0, curr = num;
         while (curr) {
             ones += (curr & 1);
-            curr = curr >> 1;
+            curr >>= 1;
         }
 
         // store the result in the buffer:
@@ -30,7 +30,7 @@ void stream_digits(const unsigned maxdigits, const unsigned buffersize,
         // new buffer:
         if (!((num + 1) % buffersize)) {
             enqueue(*buffer, queue);
-            *buffer = (char *)malloc(buffersize * sizeof(char));
+            *buffer = (char *)malloc(buffersize);
             elem = *buffer;
         }
     }
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
     unsigned maxdigits = atoi(argv[1]);
     unsigned buffersize = 1 << 20;
-    char *buffer = (char *)malloc(buffersize * sizeof(char));
+    char *buffer = (char *)malloc(buffersize);
     struct Queue queue = {0, 0};
 
     // first process: generate lots of digits and queue the results:
