@@ -17,7 +17,7 @@
 struct Node {
     struct Node *prev;
     struct Node *next;
-    void* item;
+    void* item; /* user-defined data goes here */
 };
 
 struct Queue {
